@@ -72,9 +72,6 @@ def calculate_exp_score(model_name,state,feature_maps_dict, constant,show_exp_sc
     show_exp_score_df = pd.DataFrame.from_dict(exp_score_dict, orient='index', columns=['Expressivity Score'])
     show_exp_score_df.index.name = 'Layer'
 
-
-    os.makedirs('exp_score_folder', exist_ok=True)
-    show_exp_score_df.to_csv(f'exp_score_folder/{model_name}_{state}_expressivity_scores.csv')
     if show_exp_score:
         print(show_exp_score_df)
-    return exp_score_dict, pca_var_dict, model_exp_score_sum
+    return show_exp_score_df,exp_score_dict, pca_var_dict, model_exp_score_sum

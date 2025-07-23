@@ -1,48 +1,51 @@
-2025-07-23 15:21:48,591 [INFO] The following configuration parameters were loaded from yaml file:
-2025-07-23 15:21:48,591 [INFO] Model: simple_cnn, show_summary: True, pretrained: False, classes: 10
-2025-07-23 15:21:48,606 [INFO] Training for 10 epochs with batch size 32 and optimizer adam
-2025-07-23 15:21:48,606 [INFO] Dataset_name: cifar10, Downloading dataset: True, Training data path: ./data/train, Validation data path: ./data/val, view_sample: False
-2025-07-23 15:21:48,606 [INFO] Input image shape: (32, 32, 3)
-2025-07-23 15:21:48,606 [INFO] Expressivity small constant: 1e-7
-2025-07-23 15:21:50,179 [INFO] cifar10 dataset loaded with 50000 training and 10000 test samples.
-2025-07-23 15:21:50,179 [INFO] Training data shape: (50000, 32, 32, 3), Labels shape: (50000, 1)
-2025-07-23 15:21:50,796 [INFO] Data was normalized successfully: train_data shape (50000, 32, 32, 3), test_data shape (10000, 32, 32, 3)
-2025-07-23 15:21:50,913 [INFO] Model with input shape (32, 32, 3) and output shape 10 created successfully
-2025-07-23 15:21:51,864 [INFO] Feature maps extracted successfully.
-2025-07-23 15:21:51,864 [INFO] Calculating expressivity score with constant: 1e-07 has been started
-2025-07-23 15:21:51,883 [INFO] The score of Layer conv2d was added to the list
-2025-07-23 15:21:51,883 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,891 [INFO] The score of Layer max_pooling2d was added to the list
-2025-07-23 15:21:51,891 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,901 [INFO] The score of Layer conv2d_1 was added to the list
-2025-07-23 15:21:51,902 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,913 [INFO] The score of Layer max_pooling2d_1 was added to the list
-2025-07-23 15:21:51,914 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,923 [INFO] The score of Layer conv2d_2 was added to the list
-2025-07-23 15:21:51,923 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,923 [WARNING] N.B: The score of Layer flatten was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:21:51,924 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,924 [WARNING] N.B: The score of Layer dense was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:21:51,925 [INFO] ****************************************************************************************************
-2025-07-23 15:21:51,925 [WARNING] N.B: The score of Layer dense_1 was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:21:51,925 [INFO] ****************************************************************************************************
-2025-07-23 15:27:36,891 [INFO] Model training completed.
-2025-07-23 15:27:36,939 [INFO] Model saved to saved models
-2025-07-23 15:27:38,314 [INFO] Feature maps extracted successfully.
-2025-07-23 15:27:38,314 [INFO] Calculating expressivity score with constant: 1e-07 has been started
-2025-07-23 15:27:38,324 [INFO] The score of Layer conv2d was added to the list
-2025-07-23 15:27:38,324 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,324 [INFO] The score of Layer max_pooling2d was added to the list
-2025-07-23 15:27:38,324 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,334 [INFO] The score of Layer conv2d_1 was added to the list
-2025-07-23 15:27:38,334 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,334 [INFO] The score of Layer max_pooling2d_1 was added to the list
-2025-07-23 15:27:38,334 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,350 [INFO] The score of Layer conv2d_2 was added to the list
-2025-07-23 15:27:38,350 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,350 [WARNING] N.B: The score of Layer flatten was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:27:38,350 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,350 [WARNING] N.B: The score of Layer dense was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:27:38,350 [INFO] ****************************************************************************************************
-2025-07-23 15:27:38,350 [WARNING] N.B: The score of Layer dense_1 was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
-2025-07-23 15:27:38,350 [INFO] ****************************************************************************************************
+2025-07-23 15:54:01,426 [INFO] The following configuration parameters were loaded from yaml file:
+2025-07-23 15:54:01,426 [INFO] Model: simple_cnn, show_summary: True, pretrained: False, classes: 10
+2025-07-23 15:54:01,426 [INFO] Training for 10 epochs with batch size 32 and optimizer adam
+2025-07-23 15:54:01,426 [INFO] Dataset_name: cifar10, Downloading dataset: True, Training data path: ./data/train, Validation data path: ./data/val, view_sample: False
+2025-07-23 15:54:01,426 [INFO] Input image shape: (32, 32, 3)
+2025-07-23 15:54:01,426 [INFO] Expressivity small constant: 1e-7
+2025-07-23 15:54:02,921 [INFO] cifar10 dataset loaded with 50000 training and 10000 test samples.
+2025-07-23 15:54:02,921 [INFO] Training data shape: (50000, 32, 32, 3), Labels shape: (50000, 1)
+2025-07-23 15:54:03,611 [INFO] Data was normalized successfully: train_data shape (50000, 32, 32, 3), test_data shape (10000, 32, 32, 3)
+2025-07-23 15:54:03,769 [INFO] Model with input shape (32, 32, 3) and output shape 10 created successfully
+2025-07-23 15:54:04,655 [INFO] Feature maps extracted successfully.
+2025-07-23 15:54:04,655 [INFO] Calculating expressivity score with constant: 1e-07 has been started
+2025-07-23 15:54:04,678 [INFO] The score of Layer conv2d was added to the list
+2025-07-23 15:54:04,679 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,690 [INFO] The score of Layer max_pooling2d was added to the list
+2025-07-23 15:54:04,691 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,703 [INFO] The score of Layer conv2d_1 was added to the list
+2025-07-23 15:54:04,703 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,714 [INFO] The score of Layer max_pooling2d_1 was added to the list
+2025-07-23 15:54:04,714 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,724 [INFO] The score of Layer conv2d_2 was added to the list
+2025-07-23 15:54:04,725 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,725 [WARNING] N.B: The score of Layer flatten was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:54:04,727 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,727 [WARNING] N.B: The score of Layer dense was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:54:04,728 [INFO] ****************************************************************************************************
+2025-07-23 15:54:04,729 [WARNING] N.B: The score of Layer dense_1 was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:54:04,729 [INFO] ****************************************************************************************************
+2025-07-23 15:59:36,541 [INFO] Model training completed.
+2025-07-23 15:59:36,607 [INFO] Model simple_cnn saved to results/models
+2025-07-23 15:59:36,617 [INFO] Model accuracy saved successfully.
+2025-07-23 15:59:36,621 [INFO] Expressivity scores saved successfully.
+2025-07-23 15:59:37,507 [INFO] Feature maps extracted successfully.
+2025-07-23 15:59:37,507 [INFO] Calculating expressivity score with constant: 1e-07 has been started
+2025-07-23 15:59:37,526 [INFO] The score of Layer conv2d was added to the list
+2025-07-23 15:59:37,526 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,535 [INFO] The score of Layer max_pooling2d was added to the list
+2025-07-23 15:59:37,536 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,540 [INFO] The score of Layer conv2d_1 was added to the list
+2025-07-23 15:59:37,540 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,553 [INFO] The score of Layer max_pooling2d_1 was added to the list
+2025-07-23 15:59:37,553 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,558 [INFO] The score of Layer conv2d_2 was added to the list
+2025-07-23 15:59:37,558 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,558 [WARNING] N.B: The score of Layer flatten was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:59:37,558 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,558 [WARNING] N.B: The score of Layer dense was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:59:37,564 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,565 [WARNING] N.B: The score of Layer dense_1 was not added to the list. Exception: not enough values to unpack (expected 4, got 2)
+2025-07-23 15:59:37,565 [INFO] ****************************************************************************************************
+2025-07-23 15:59:37,569 [INFO] Expressivity scores saved successfully.
