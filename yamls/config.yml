@@ -1,0 +1,23 @@
+# config.yaml
+model:
+  name: "simple_cnn"
+  pretrained: False
+  num_classes: 10
+  show_summary: True
+
+training:
+  batch_size: 32
+  epochs: 10
+  learning_rate: 0.001
+  optimizer: "adam"
+
+dataset:
+  dataset_name: "cifar10"
+  download: True
+  train_path: "./data/train"
+  val_path: "./data/val"
+  input_shape: [32, 32, 3]
+  view_sample: False
+
+expressivity:
+  small_constant: 1e-7

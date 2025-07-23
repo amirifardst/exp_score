@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: expressivity_project
+Version: 0.1.0
+Summary: A tool to do calculations of expressivity in machine learning models
+Home-page: xxx
+Author: Mohammad Amirifard
+Author-email: xxx
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: ==3.11.13
+Requires-Dist: keras
+Requires-Dist: numpy
+Requires-Dist: jupyterlab
+Requires-Dist: matplotlib
+Requires-Dist: tensorflow
+Requires-Dist: notebook
+Requires-Dist: seaborn
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
