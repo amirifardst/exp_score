@@ -99,9 +99,9 @@ def save_model(model, model_name, database_name):
     model.save(os.path.join(save_dir, f'{model_name}_{database_name}_{timestamp}.h5'))
     make_logger.info(f"Model {model_name} saved to {save_dir}")
 
-def save_exp_score(show_exp_score_df, model_name, database_name):
+def save_exp_score(exp_score_df, model_name, database_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     save_dir = "results/exp_scores"
     os.makedirs(save_dir, exist_ok=True)
-    show_exp_score_df.to_csv(f"{save_dir}/{model_name}_{database_name}_{timestamp}.csv", mode="a", header=False, index=False)
+    exp_score_df.to_csv(f"{save_dir}/{model_name}_{database_name}_{timestamp}.csv", mode="a", header=True, index=True)
     make_logger.info("Expressivity scores saved successfully.")
