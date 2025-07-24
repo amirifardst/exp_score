@@ -3,6 +3,14 @@ import tensorflow as tf
 from src.logging.logger import get_logger
 make_logger = get_logger()
 
+ # Set initial seed for reproducibility
+def conv2d_with_init(filters, kernel_size, **kwargs):
+    initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=42)
+    return tf.keras.layers.Conv2D(filters, kernel_size, kernel_initializer=initializer, **kwargs)
+
+def dense_with_init(units, **kwargs):
+    initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=42)
+    return tf.keras.layers.Dense(units, kernel_initializer=initializer, **kwargs)
 
 def create_model(input_shape, num_classes,optimizer, show_summary=False):
     """
@@ -16,14 +24,14 @@ def create_model(input_shape, num_classes,optimizer, show_summary=False):
         model: A compiled CNN model.
     """
     model = models.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+    model.add(conv2d_with_init(32, (3, 3), activation='relu', input_shape=input_shape))
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(conv2d_with_init(64, (3, 3), activation='relu'))
     model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(conv2d_with_init(64, (3, 3), activation='relu'))
     model.add(layers.Flatten())
-    model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(num_classes))  # Use num_classes parameter
+    model.add(dense_with_init(64, activation='relu'))
+    model.add(dense_with_init(num_classes))  # Use num_classes parameter
 
     model.compile(optimizer=optimizer,
                       loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -32,7 +40,7 @@ def create_model(input_shape, num_classes,optimizer, show_summary=False):
     if show_summary:
         model.summary()
 
-    make_logger.info("Model with input shape {} and output shape {} created successfully".format(input_shape, num_classes))
+    make_logger.info(f"Model with input shape {input_shape} and output shape {num_classes} created successfully")
 
     return model
 
