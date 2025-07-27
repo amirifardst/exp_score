@@ -7,14 +7,11 @@ if os.path.exists(log_path):
 from src.utils import load_yaml
 from data import dataloading
 import importlib
-from src.utils.utils import get_all_feature_maps
-from src.utils.exp_score import calculate_exp_score
 import numpy as np
 from src.engine.trainer import train_model
-from src.utils.utils import save_model,save_accuracy,save_exp_score
+from src.utils.utils import save_model,save_accuracy
 from tensorflow.keras.models import load_model
 from src.logging.logger import get_logger
-from data.random_gaussion import random_gaussian_input
 import glob
 make_logger = get_logger(__name__)
 
@@ -33,7 +30,6 @@ optimizer = config_dict["training"]["optimizer"]
 epochs = config_dict["training"]["epochs"]
 batch_size = config_dict["training"]["batch_size"]
 
-small_constant = config_dict["expressivity"]["small_constant"]
 
 # Dynamically import the model module based on the model name from the config
 model_module = f"src.models.{model_name}"
@@ -51,21 +47,28 @@ train_images, test_images = dataloading.normalize_images(train_images, test_imag
 # Instantiate model
 model = create_model(input_shape=input_shape, optimizer=optimizer, num_classes=num_classes, show_summary=show_summary)
 
-# Get feature_maps before training
-# Step 1: Generate random Gaussian input
-data_input = random_gaussian_input(batch_size=batch_size, input_shape=input_shape)  # Generate random Gaussian input
+# Train model
+if pretrained:
+    model_files = glob.glob(f"results/models/{model_name}_*.h5")
+    if not model_files:
+        raise FileNotFoundError(f"No pretrained model found for {model_name}")
+    model_path = model_files[0]  # You may want to sort or select the latest if multiple exist
+    model = load_model(model_path)
+    make_logger.info(f"Loading pretrained model completed: {model_name}")
 
-# Step 2: Get feature maps from the model
-feature_dict = get_all_feature_maps(model, data_input, show_maps=False)
+else:
+    # Train the model
+    make_logger.info(f"Training model: {model_name} on dataset: {dataset_name} started.")
+    model, result = train_model(model, train_images, train_labels,
+                      test_images, test_labels, epochs, batch_size)
+    make_logger.info(f"Training completed for model: {model_name}")
+    
+    # Save the trained model
+    save_model(model, model_name, dataset_name)
+    # Save accuracy
+    save_accuracy(result.history['accuracy'][-1], result.history['val_accuracy'][-1], model_name, dataset_name)
 
-# Step 3: Get expressivity_score before training
-exp_score_df, exp_score_dict,model_exp_score_sum = calculate_exp_score(model_name=model_name,
-                                                                                           feature_maps_dict=feature_dict,
-                                                                                           constant=small_constant,
-                                                                                           show_exp_score=True)
-# Save expressivity scores before training
-make_logger.info(f"bef_train_model_exp_score_sum for model {model_name} is: {model_exp_score_sum}")
-save_exp_score(exp_score_df, model_name, dataset_name)
+
 
 if __name__ == "__main__":
     pass
