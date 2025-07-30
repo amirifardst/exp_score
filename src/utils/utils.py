@@ -2,10 +2,12 @@
 import datetime
 import os
 import pandas as pd
-from tensorflow.keras.models import Model
 from src.logging.logger import get_logger
 from IPython.display import display
 from datetime import datetime
+from tensorflow.keras.models import Model
+import numpy as np
+
 
 make_logger = get_logger(__name__)
 
@@ -48,35 +50,46 @@ def get_filters(model,show_filters=False):
         print(filters_df)
     return filters_dict, filters_df
 
-def get_feature_maps(model,test_input,show_maps=False):
+def get_all_feature_maps(model, input_tensor, show_maps=True, remove_unnecessary=True):
     """
-    Get feature maps from the model for a given input.
-    Args :
-        model: The Keras model from which to extract feature maps.
-        test_input: The input data for which to obtain feature maps.
+    Extract feature maps from all layers in a Keras model using one forward pass.
+   
+    Args:
+        model: tf.keras.Model
+        input_tensor: input data (e.g., Gaussian or real image batch)
 
     Returns:
-        dict: A dictionary containing the feature maps for each layer.
-        pd.DataFrame: A DataFrame containing the feature maps for each layer.
+        feature_dict: {layer_name: output_array}
     """
-    feature_maps_dict = {}
-    feature_maps_df = pd.DataFrame(columns=["Layer Name", "Feature Map Shape"])
-    for index in  range(len(model.layers)):
-        name = model.layers[index].name
-        new_model = Model(inputs=model.inputs, outputs=model.layers[index].output)
-        feature_maps = new_model.predict(test_input)
-        feature_maps_dict[name] = feature_maps
+    # Filter out InputLayer (no meaningful output)
+    layers_to_use = [layer for layer in model.layers if hasattr(layer, 'output')]
 
-        row = [name, feature_maps.shape]
-        feature_maps_df = pd.concat([feature_maps_df, pd.DataFrame([row], columns=feature_maps_df.columns)], ignore_index=True)
+    if remove_unnecessary:
+        # Remove unnecessary layers (e.g., Dropout, Flatten)
+        layers_to_use = [layer for layer in layers_to_use if not layer.__class__.__name__ in ['Dropout',
+                                                                                              'Flatten','BatchNormalization',
+                                                                                              "MaxPooling2D"]]
+
+    
+    # Build a model with multiple outputs
+    feature_model = Model(inputs=model.inputs,
+                          outputs=[layer.output for layer in layers_to_use])
+   
+    
+    # Run one forward pass
+    outputs = feature_model.predict(input_tensor, verbose=0)
+    # Map layer names to outputs
+    feature_dict = {layer.name: output for layer, output in zip(layers_to_use, outputs)}
+    
     if show_maps:
-        display(feature_maps_df)
+        print('feature maps:')
+        for layer_name, feature_map in feature_dict.items():
+            print(f"Layer: {layer_name}, Feature Map Shape: {feature_map.shape}")
+    return feature_dict
 
-    make_logger.info("Feature maps extracted successfully.")
-    return feature_maps_dict, feature_maps_df
 
 
-def save_accuracy(accuracy, model_name,database_name):
+def save_accuracy(accuracy,val_accuracy, model_name,database_name):
     """
     Save the model accuracy to a text file.
     Args:
@@ -84,9 +97,9 @@ def save_accuracy(accuracy, model_name,database_name):
         model_name (str): The name of the model.
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    df = pd.DataFrame({"Model Name": [model_name], "Accuracy": [accuracy]})
+    df = pd.DataFrame({"Model Name": [model_name], "Accuracy": [accuracy], "Validation Accuracy": [val_accuracy]})
     os.makedirs("results/model_accuracies/Val_accuracy/", exist_ok=True)
-    df.to_csv(f"results/model_accuracies/Val_accuracy/{model_name}_{database_name}_{timestamp}_.csv", mode="a", header=False, index=False)
+    df.to_csv(f"results/model_accuracies/Val_accuracy/{model_name}_{database_name}_{timestamp}_.csv", mode="a", header=True, index=False)
     make_logger.info("Model accuracy saved successfully.")
 
 def save_model(model, model_name, database_name):
