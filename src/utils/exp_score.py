@@ -14,6 +14,8 @@ def calculate_exp_score(model_name,feature_maps_dict, constant,show_exp_score = 
     # num_layers = len(layers_name_list)
     # make_logger.info(f"Processing {num_layers} layers for expressivity score calculation")
     num_layers_with_scores = 0
+    previous_layer_expressivity_score = 0
+    total_prog_score =  0 # It is used to find minimum progressivity score
     for layer_name, fmap in feature_maps_dict.items():
         try:
             make_logger.info('*'*100)
@@ -76,11 +78,16 @@ def calculate_exp_score(model_name,feature_maps_dict, constant,show_exp_score = 
             Normalized_expressivity_score = expressivity_score / tf.math.log(tf.cast(c, tf.float32)).numpy().item()
             make_logger.info(f'Normalized expressivity score for layer {layer_name}: {Normalized_expressivity_score}')   
 
+            # Step 8: Calculate the progressivity score
+    
+            progressivity_score = Normalized_expressivity_score - previous_layer_expressivity_score
+            previous_layer_expressivity_score = Normalized_expressivity_score
 
-
+            if progressivity_score<total_prog_score:
+                total_prog_score = progressivity_score  
 
             exp_score_dict[layer_name] = {"spatial_size": spatial_size, "num_channels": c,
-                                      "expressivity_score": Normalized_expressivity_score}
+                                      "expressivity_score": Normalized_expressivity_score, "progressivity_score": progressivity_score}
             model_exp_score_sum += Normalized_expressivity_score
 
             make_logger.info(f'The score of Layer {layer_name} was added to the list')
@@ -93,6 +100,7 @@ def calculate_exp_score(model_name,feature_maps_dict, constant,show_exp_score = 
     
     # Normalize the total expressivity score by the number of layers
     average_exp_score = model_exp_score_sum / num_layers_with_scores if num_layers_with_scores > 0 else 0
+    
     make_logger.info(f"Average expressivity score for the model {model_name} is: {average_exp_score}")
     print('expressivity_score_dict:', exp_score_dict)
     print(exp_score_dict.keys())
@@ -101,16 +109,18 @@ def calculate_exp_score(model_name,feature_maps_dict, constant,show_exp_score = 
         'Spatial Size': [v['spatial_size'] for v in exp_score_dict.values()],
         'Number of Channels': [v['num_channels'] for v in exp_score_dict.values()],
         'Expressivity Score': [v['expressivity_score'] for v in exp_score_dict.values()],
+        'Progressivity Score': [v['progressivity_score'] for v in exp_score_dict.values()],
     })
     # Add a separate row for the average expressivity score
     avg_row = pd.DataFrame({
-        'Layer Name': ['Average'],
+        'Layer Name': ['scores'],
         'Spatial Size': [None],
         'Number of Channels': [None],
         'Expressivity Score': [average_exp_score],
+        'Progressivity Score': [total_prog_score],
     })
     exp_score_df = pd.concat([exp_score_df, avg_row], ignore_index=True)
 
     if show_exp_score:
         print(exp_score_df)
-    return exp_score_df, exp_score_dict, average_exp_score
+    return exp_score_df, exp_score_dict, average_exp_score, total_prog_score
