@@ -56,10 +56,10 @@ model = create_model(input_shape=input_shape, optimizer=optimizer, num_classes=n
 data_input = random_gaussian_input(batch_size=batch_size, input_shape=input_shape)  # Generate random Gaussian input
 
 # Step 2: Get feature maps from the model
-feature_dict = get_all_feature_maps(model, data_input, show_maps=False)
+feature_dict = get_all_feature_maps(model, data_input, show_maps=True, remove_unnecessary=True)
 
 # Step 3: Get expressivity_score before training
-exp_score_df, exp_score_dict,model_exp_score_sum = calculate_exp_score(model_name=model_name,
+exp_score_df, exp_score_dict,model_exp_score_sum,total_prog_score = calculate_exp_score(model_name=model_name,
                                                                                            feature_maps_dict=feature_dict,
                                                                                            constant=small_constant,
                                                                                            show_exp_score=True)
