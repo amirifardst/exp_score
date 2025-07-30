@@ -1,13 +1,13 @@
 # config.yaml
 model:
-  name: "simple_cnn"
+  name: "complex_cnn"
   pretrained: False
   num_classes: 10
   show_summary: True
 
 training:
-  batch_size: 32
-  epochs: 10
+  batch_size: 64
+  epochs: 100
   learning_rate: 0.001
   optimizer: "adam"
 
@@ -20,4 +20,4 @@ dataset:
   view_sample: False
 
 expressivity:
-  small_constant: 1e-7
+  small_constant: 1e-8
