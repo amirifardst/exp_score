@@ -1,4 +1,5 @@
 import tensorflow as tf
+import os
 from src.logging.logger import get_logger
 make_logger = get_logger()
 
@@ -11,9 +12,10 @@ def dense_with_init(units, **kwargs):
     initializer = tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=42)
     return tf.keras.layers.Dense(units, kernel_initializer=initializer, **kwargs)
 
-def create_model(input_shape, num_classes, optimizer, show_summary=False):
+def create_model(database_name, model_name, model_input_shape, num_classes, optimizer, show_summary=False):
     """
-    Create a simple CNN model for image classification.
+    Create model_4 for image classification.
+    Model_4 is a complex CNN model.
 
     Args:
         input_shape (tuple): The shape of the input images.
@@ -26,7 +28,7 @@ def create_model(input_shape, num_classes, optimizer, show_summary=False):
 
     # Define the model architecture
     model = tf.keras.Sequential([
-                                conv2d_with_init(32,(3,3),activation='relu',padding='same',input_shape=input_shape),
+                                conv2d_with_init(32,(3,3),activation='relu',padding='same',input_shape=model_input_shape),
                                 tf.keras.layers.BatchNormalization(),
                                 conv2d_with_init(32,(3,3),activation='relu',padding='same'),
                                 tf.keras.layers.BatchNormalization(),
@@ -53,9 +55,13 @@ def create_model(input_shape, num_classes, optimizer, show_summary=False):
                   metrics=['accuracy'])
     
     if show_summary:
-        model.summary()
+            save_dir = f"results/{database_name}/{model_name}"
+            os.makedirs(save_dir, exist_ok=True)
+            tf.keras.utils.plot_model(model, to_file=f"{save_dir}/{model_name}.png", show_shapes=True)
+            print('In the following you can see the model summary:')
+            model.summary()
 
-    make_logger.info(f"Model with input shape {input_shape} and output shape {num_classes} created successfully")
+    make_logger.info(f"Model with input shape {model_input_shape} and output shape {num_classes} created successfully")
 
     return model
 

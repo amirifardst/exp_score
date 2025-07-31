@@ -89,32 +89,29 @@ def get_all_feature_maps(model, input_tensor, show_maps=True, remove_unnecessary
 
 
 
-def save_accuracy(accuracy,val_accuracy, model_name,database_name):
+def save_accuracy(model_name, database_name, accuracy,val_accuracy,):
     """
     Save the model accuracy to a text file.
     Args:
         accuracy (float): The accuracy of the model.
         model_name (str): The name of the model.
     """
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     df = pd.DataFrame({"Model Name": [model_name], "Accuracy": [accuracy], "Validation Accuracy": [val_accuracy]})
-    os.makedirs("results/model_accuracies/Val_accuracy/", exist_ok=True)
-    df.to_csv(f"results/model_accuracies/Val_accuracy/{model_name}_{database_name}_{timestamp}_.csv", mode="a", header=True, index=False)
-    make_logger.info("Model accuracy saved successfully.")
+    save_dir = f"results/{database_name}/{model_name}"
+    os.makedirs(save_dir, exist_ok=True)
+    df.to_csv(f"{save_dir}/{model_name}_accuracy.csv", mode="a", header=True, index=True)
+    make_logger.info(f"Accuracy of model {model_name} saved successfully.")
 
 def save_model(model, model_name, database_name):
     # Create the directory if it doesn't exist
-    save_dir = "results/models"
+    save_dir = f"results/{database_name}/{model_name}"
     os.makedirs(save_dir, exist_ok=True)
-
-    # Add time format to the filename
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    model.save(os.path.join(save_dir, f'{model_name}_{database_name}_{timestamp}.h5'))
+    model.save(os.path.join(save_dir, f'{model_name}.h5'))
     make_logger.info(f"Model {model_name} saved to {save_dir}")
 
 def save_exp_score(exp_score_df, model_name, database_name):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    save_dir = "results/exp_scores"
+    save_dir = f"results/{database_name}/{model_name}"
     os.makedirs(save_dir, exist_ok=True)
-    exp_score_df.to_csv(f"{save_dir}/{model_name}_{database_name}_{timestamp}.csv", mode="a", header=True, index=True)
-    make_logger.info("Expressivity scores saved successfully.")
+    exp_score_df.to_csv(f"{save_dir}/{model_name}_{timestamp}_score.csv", mode="a", header=True, index=True)
+    make_logger.info(f"Expressivity scores of model {model_name} saved successfully.")

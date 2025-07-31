@@ -9,8 +9,7 @@ def train_model(model, train_images, train_labels, test_images, test_labels, epo
 
     early_stopping = keras.callbacks.EarlyStopping(
                                                     monitor="val_accuracy",
-                                                    min_delta=0.001,
-                                                    patience=3,
+                                                  patience=5,
                                                     verbose=1,
                                                     mode="auto",
                                                     baseline=None,

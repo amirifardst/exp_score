@@ -13,6 +13,14 @@ from src.utils.utils import save_model,save_accuracy
 from tensorflow.keras.models import load_model
 from src.logging.logger import get_logger
 import glob
+import random
+import tensorflow as tf
+
+# Set reproduction 
+seed_value = 42  # your specified seed number
+random.seed(seed_value)                    # Python built-in random module
+np.random.seed(seed_value)                 # NumPy random seed
+tf.random.set_seed(seed_value)
 make_logger = get_logger(__name__)
 
 config_dict = load_yaml.main(config_file_dir="yamls/config.yml")
@@ -45,7 +53,7 @@ train_images, test_images = dataloading.normalize_images(train_images, test_imag
 
 
 # Instantiate model
-model = create_model(input_shape=input_shape, optimizer=optimizer, num_classes=num_classes, show_summary=show_summary)
+model = create_model(database_name=dataset_name, model_name=model_name, model_input_shape=input_shape, num_classes=num_classes, optimizer=optimizer, show_summary=show_summary)
 
 # Train model
 if pretrained:
@@ -58,15 +66,17 @@ if pretrained:
 
 else:
     # Train the model
-    make_logger.info(f"Training model: {model_name} on dataset: {dataset_name} started.")
     model, result = train_model(model, train_images, train_labels,
                       test_images, test_labels, epochs, batch_size)
-    make_logger.info(f"Training completed for model: {model_name}")
+    
     
     # Save the trained model
     save_model(model, model_name, dataset_name)
     # Save accuracy
-    save_accuracy(result.history['accuracy'][-1], result.history['val_accuracy'][-1], model_name, dataset_name)
+    best_epoch = np.argmax(result.history['val_accuracy'])
+    accuracy = result.history['accuracy'][best_epoch]
+    val_accuracy = result.history['val_accuracy'][best_epoch]
+    save_accuracy(model_name, dataset_name, accuracy, val_accuracy)
 
 
 
