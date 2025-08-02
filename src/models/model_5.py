@@ -3,8 +3,7 @@ import os
 from src.logging.logger import get_logger
 make_logger = get_logger()
 import tensorflow as tf
-import numpy as np
-import tensorflow.keras as keras
+import keras
 
 
 def bn_relu(x):
@@ -43,8 +42,8 @@ x : tensor
 """
 
     # store the original input
-    identity = tf.identity(x)
-
+    # store the original input
+    identity = x
     for n in range(n_blocks):
         # after layer 2, at the beginning of each layer, we want to downsample the input with 1x1 convolutions,
         # and strides of 2

@@ -34,10 +34,9 @@ dataset_name = config_dict["dataset"]["name"]
 view_sample = config_dict["dataset"]["view_sample"]
 input_shape = config_dict["dataset"]["input_shape"]
 
-optimizer = config_dict["training"]["optimizer"]
 epochs = config_dict["training"]["epochs"]
 batch_size = config_dict["training"]["batch_size"]
-
+lr = config_dict["training"]["learning_rate"]
 
 # Dynamically import the model module based on the model name from the config
 model_module = f"src.models.{model_name}"
@@ -53,6 +52,7 @@ train_images, test_images = dataloading.normalize_images(train_images, test_imag
 
 
 # Instantiate model
+optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
 model = create_model(database_name=dataset_name, model_name=model_name, model_input_shape=input_shape, num_classes=num_classes, optimizer=optimizer, show_summary=show_summary)
 
 # Train model
