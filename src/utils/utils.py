@@ -118,28 +118,42 @@ def save_exp_score(exp_score_df, model_name, database_name):
     make_logger.info(f"Expressivity scores of model {model_name} saved successfully.")
 
 
-def save_acc_nas(accuracy_list,model_names_list, database_name):
+def save_sorted_accuracy(accuracy_list,model_names_list, database_name):
     """
-    Save the model accuracy to a text file.
+    Save all model accuracies to a csvfile.
     Args:
         accuracy_list (list): The list of accuracies of the models.
         model_names (list): The list of model names.
+        database_name (str): The name of the database.
+    Returns:
+        accuracy_df (DataFrame): DataFrame containing model names and their accuracies.
+
     """
     sorted_acc_list = sorted(zip(model_names_list, accuracy_list), key=lambda x: x[1], reverse=True)
     df = pd.DataFrame(sorted_acc_list, columns=["Architecture", "Accuracy"])
     save_dir = f"results/{database_name}/nas"
     os.makedirs(save_dir, exist_ok=True)
     df.to_csv(f"{save_dir}/nas_accuracy.csv", mode="a", header=True, index=True)
-    make_logger.info(f"Accuracy of NAS models saved successfully.")
+    make_logger.info(f"Accuracy of all models saved successfully in {save_dir}/nas_accuracy.csv.")
+    return df
 
-def save_exp():
+def save_sorted_exp_score(method="mean", type_of_score="Normalized Expressivity Score",database_name="cifar10"):
+    """
+    Save the ranking DataFrame to a CSV file.
+    Args:
+        method (str): The method used for ranking (e.g., "mean").
+        type (str): The type of score used for ranking (e.g., "Normalized Expressivity Score").
+        database_name (str): The name of the database.
+    Returns:
+        
+    """
 
     # Path to the results directory
-    results_dir = 'results/cifar10'
+    results_dir = f'results/{database_name}'
     nas_dir = os.path.join(results_dir, 'nas')
     os.makedirs(nas_dir, exist_ok=True)
 
-    mean_scores = []
+    scores = []
 
     # Loop through folders in results directory
     for folder in os.listdir(results_dir):
@@ -152,13 +166,16 @@ def save_exp():
             csv_path = os.path.join(folder_path, csv_files[0])
             df = pd.read_csv(csv_path, index_col=0)
             # Find the row where 'Layer Name' column is 'mean'
-            mean_row = df[df['Layer Name'] == 'mean']
-            if not mean_row.empty:
-                mean_value = mean_row['Normalized Expressivity Score'].values[0]
-                mean_scores.append({'Architecture': folder, 'Mean Normalized Expressivity Score': mean_value})
+            row = df[df['Layer Name'] == method]
+            if not row.empty:
+                value = row[f'{type_of_score}'].values[0]
+                scores.append({'Architecture': folder, f'{method}_{type_of_score}': value})
 
     # Save to DataFrame and CSV
-    mean_df = pd.DataFrame(mean_scores)
-    mean_df = mean_df.sort_values(by='Mean Normalized Expressivity Score', ascending=False,ignore_index=True)
-    output_path = os.path.join(nas_dir, 'architecture_mean_scores.csv')
-    mean_df.to_csv(output_path, index=False)
+    scores_df = pd.DataFrame(scores)
+    scores_df = scores_df.sort_values(by=f'{method}_{type_of_score}', ascending=False,ignore_index=True)
+    output_path = os.path.join(nas_dir, 'Expressivity_Scores.csv')
+    scores_df.to_csv(output_path, index=False)
+    make_logger.info(f"Ranking DataFrame saved to {output_path}")
+
+    return scores_df
