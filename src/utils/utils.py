@@ -67,7 +67,8 @@ def get_all_feature_maps(model, input_tensor, show_maps=True, remove_unnecessary
     if remove_unnecessary:
         # Remove unnecessary layers (e.g., Dropout, Flatten)
         layers_to_use = [layer for layer in layers_to_use if not layer.__class__.__name__ in ['Dropout',
-                                                                                              'Flatten','BatchNormalization',
+                                                                                              'Flatten',
+                                                                                              'BatchNormalization',
                                                                                               "MaxPooling2D"]]
 
     
@@ -115,3 +116,49 @@ def save_exp_score(exp_score_df, model_name, database_name):
     os.makedirs(save_dir, exist_ok=True)
     exp_score_df.to_csv(f"{save_dir}/{model_name}_{timestamp}_score.csv", mode="a", header=True, index=True)
     make_logger.info(f"Expressivity scores of model {model_name} saved successfully.")
+
+
+def save_acc_nas(accuracy_list,model_names_list, database_name):
+    """
+    Save the model accuracy to a text file.
+    Args:
+        accuracy_list (list): The list of accuracies of the models.
+        model_names (list): The list of model names.
+    """
+    sorted_acc_list = sorted(zip(model_names_list, accuracy_list), key=lambda x: x[1], reverse=True)
+    df = pd.DataFrame(sorted_acc_list, columns=["Architecture", "Accuracy"])
+    save_dir = f"results/{database_name}/nas"
+    os.makedirs(save_dir, exist_ok=True)
+    df.to_csv(f"{save_dir}/nas_accuracy.csv", mode="a", header=True, index=True)
+    make_logger.info(f"Accuracy of NAS models saved successfully.")
+
+def save_exp():
+
+    # Path to the results directory
+    results_dir = 'results/cifar10'
+    nas_dir = os.path.join(results_dir, 'nas')
+    os.makedirs(nas_dir, exist_ok=True)
+
+    mean_scores = []
+
+    # Loop through folders in results directory
+    for folder in os.listdir(results_dir):
+        folder_path = os.path.join(results_dir, folder)
+        if os.path.isdir(folder_path) and folder.startswith('Architecture'):
+            # Find the first CSV file in the folder
+            csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+            if not csv_files:
+                continue
+            csv_path = os.path.join(folder_path, csv_files[0])
+            df = pd.read_csv(csv_path, index_col=0)
+            # Find the row where 'Layer Name' column is 'mean'
+            mean_row = df[df['Layer Name'] == 'mean']
+            if not mean_row.empty:
+                mean_value = mean_row['Normalized Expressivity Score'].values[0]
+                mean_scores.append({'Architecture': folder, 'Mean Normalized Expressivity Score': mean_value})
+
+    # Save to DataFrame and CSV
+    mean_df = pd.DataFrame(mean_scores)
+    mean_df = mean_df.sort_values(by='Mean Normalized Expressivity Score', ascending=False,ignore_index=True)
+    output_path = os.path.join(nas_dir, 'architecture_mean_scores.csv')
+    mean_df.to_csv(output_path, index=False)
