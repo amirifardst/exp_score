@@ -26,7 +26,6 @@ def main(config_file_dir):
     batch_size = config["training"]["batch_size"]
     epochs = config["training"]["epochs"]
     learning_rate = config["training"]["learning_rate"]
-    optimizer = config["training"]["optimizer"]
 
     # Access dataset config
     dataset_name = config["dataset"]["dataset_name"]
@@ -50,7 +49,6 @@ def main(config_file_dir):
             "batch_size": batch_size,
             "epochs": epochs,
             "learning_rate": learning_rate,
-            "optimizer": optimizer
         },
         "dataset": {
             "name": dataset_name,
@@ -69,7 +67,7 @@ def main(config_file_dir):
 
     make_logger.info("The following configuration parameters were loaded from yaml file:")
     make_logger.info(f"Model: {model_name}, show_summary: {show_summary}, pretrained: {pretrained}, classes: {num_classes}")
-    make_logger.info(f"Training for {epochs} epochs with batch size {batch_size} and optimizer {optimizer}")
+    make_logger.info(f"Training for {epochs} epochs with batch size {batch_size}")
     make_logger.info(f"Dataset_name: {dataset_name}, Downloading dataset: {train_download}, Training data path: {train_path}, Validation data path: {val_path}, view_sample: {view_sample}")
     make_logger.info(f"Input image shape: {input_shape}")
     make_logger.info(f"Expressivity small constant: {small_constant}")
